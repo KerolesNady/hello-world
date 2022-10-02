@@ -58,7 +58,29 @@ jobs:
          name: on error
          command: echo "Hello world!"
          when: on_fail
-      
+   
+  build:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run: npm i
+      - run: npm run lint
+
+  test:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run: npm i
+      - run: npm run test
+
+  analyze:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run: npm run audit
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
@@ -77,3 +99,13 @@ workflows:
     jobs:
       - my_job
       - test_failures
+  
+  my-workflow:
+    jobs:
+      - build
+      - test:
+         requires: 
+            - build
+      - analyze:
+         requires: 
+            - test
