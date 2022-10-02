@@ -48,16 +48,6 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - print_pipeline_id
-  
-  test_failures:
-    docker:
-      - image: circleci/node:13.8.0
-    steps:
-      - run: return 1
-      - run:
-         name: on error
-         command: echo "Hello world!"
-         when: on_fail
    
   build:
     docker:
@@ -94,11 +84,6 @@ workflows:
       - print_output_file:
            requires:
              - save_hello_world_output
-
-  my_job_workflow:
-    jobs:
-      - my_job
-      - test_failures
   
   my-workflow:
     jobs:
